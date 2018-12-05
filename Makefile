@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/22 10:52:15 by asenat            #+#    #+#              #
-#    Updated: 2018/12/03 18:51:14 by asenat           ###   ########.fr        #
+#    Updated: 2018/12/05 09:43:15 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 .SUFFIXES:
 NAME		:= abstract-vm
 CC 		:= clang++
-CFLAGS		:= -Wall -Wextra -Werror -std='c++11' -g
+CFLAGS		:= -I. -Wall -Wextra -Werror -std='c++14' -g
 RM		:= rm -f
 OBJECT_DIR	:= obj
 COMP		:= $(CC) $(CFLAGS) -c -o
@@ -29,7 +29,7 @@ endif
 ## Sources directories
 #
 TEST_DIRS	:= tests
-SRC_DIRS	:= vm
+SRC_DIRS	:= vm lexer utils
 #
 
 ## Colors
