@@ -5,7 +5,7 @@
 #include <iostream>
 
 int main() {
-  std::stringstream input("  aa  a  aaa ");
+  std::stringstream input(" int32(543.3). push;   a\n;\n\nexit");
   auto container = lexer::lexe(input);
   std::cout << "Lexed tokens (s=" << container.size() << ") = ";
   utils::dump_objects(std::cout, container);

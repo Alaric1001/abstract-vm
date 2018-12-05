@@ -11,7 +11,7 @@ namespace utils {
 class IDumpable {
   public:
   virtual ~IDumpable() = default;
-  virtual void dump(std::ostream &) const = 0;
+  virtual void dump(std::ostream &, bool verbose = true) const = 0;
 };
 
 template <class Collection>
@@ -22,7 +22,7 @@ void dump_objects(std::ostream &out, const Collection &collection) {
     i->dump(out);
     out << (end - i == 1 ? " " : ", ");
   }
-  out << "}";
+  out << "}" << std::endl;
 }
 
 } // namespace utils

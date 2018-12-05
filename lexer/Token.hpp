@@ -8,18 +8,25 @@
 
 namespace lexer {
 class Token : public utils::IDumpable {
-  public:
-  enum class Type {Blank, Instruction, Value, Separator, Numeric, Brace};
+ public:
+  enum class Type { Unknown, Blank, Instruction, Value, Newline, Numeric, Punctuation };
 
-  private:
+ private:
   Type m_type;
   const std::string m_value;
 
-  public:
+ public:
   Token() = default;
+  Token(const Token&) = default;
   Token(Type, const std::string &);
-  void dump(std::ostream &) const override;
+  Token(Type, std::string &&);
+  void dump(std::ostream &, bool verbose = true) const override;
+
+  auto type() const { return m_type; }
+  const auto &value() const { return m_value; }
+
+  bool operator==(const Token &) const;
 };
 
-} // namespace lexer
-#endif // TOKEN_HPP
+}  // namespace lexer
+#endif  // TOKEN_HPP
