@@ -8,29 +8,35 @@
 namespace parser {
 namespace pattern {
 
-class PatternToken {
+class Token {
  private:
-  using LexerToken = lexer::Token::Type;
-  LexerToken m_type;
-  bool m_mandatory;
-  std::string m_value;
+  bool m_optional;
 
  public:
-  PatternToken() = delete;
-  PatternToken(LexerToken type, bool mandatory = true, std::string&& val = "")
-      : m_type(type), m_mandatory(mandatory), m_value(std::move(val)) {}
+  virtual ~Token() = default;
+  Token(bool optional) : m_optional(optional) {}
 
-  bool mandatory() const { return m_mandatory; }
-  auto type() const { return m_type; }
-  const auto &value() const { return m_value; }
+  bool optional() const { return m_optional; }
 
-  bool operator==(const lexer::Token& token) const {
-    if (m_value.empty()) return m_type == token.type();
-    return m_type == token.type() and token.value() == m_value;
+  virtual bool operator==(const lexer::Token& token) const = 0;
+  bool operator!=(const lexer::Token& token) const {
+    return !(operator==(token));
   }
 };
 
-using Pattern = std::vector<PatternToken>;
+class Eq : public Token {
+ private:
+  lexer::Token::Type m_ref;
+
+ public:
+  Eq(lexer::Token::Type ref, bool optional = false)
+      : Token(optional), m_ref(ref) {}
+
+  bool operator==(const lexer::Token& token) const override;
+};
+
+using Pattern = std::vector<std::unique_ptr<Token>>;
+
 }  // namespace pattern
 }  // namespace parser
 

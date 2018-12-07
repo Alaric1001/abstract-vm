@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/22 10:52:15 by asenat            #+#    #+#              #
-#    Updated: 2018/12/05 09:43:15 by asenat           ###   ########.fr        #
+#    Updated: 2018/12/07 18:25:14 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ endif
 ## Sources directories
 #
 TEST_DIRS	:= tests
-SRC_DIRS	:= vm lexer utils
+SRC_DIRS	:= vm lexer parser utils
 #
 
 ## Colors

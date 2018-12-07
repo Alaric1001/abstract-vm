@@ -21,8 +21,16 @@ bool blank_check(LexerIterator &i, std::deque<Token> &container) {
 }
 
 bool punctuation_check(LexerIterator &it, std::deque<Token> &container) {
-  if (get_punctuation_type(*it) == PunctuationType::None) return false;
-  container.emplace_back(Token::Type::Punctuation, std::string(1, *it));
+  Token::Type type = Token::Type::Unknown;
+  switch (*it) {
+    case '(': type = Token::Type::OpeningBrace; break;
+    case ')': type = Token::Type::ClosingBrace; break;
+    case '-': type = Token::Type::Sign; break;
+    case '+': type = Token::Type::Sign; break;
+    case '.': type = Token::Type::Dot; break;
+  }
+  if (type == Token::Type::Unknown) return false;
+  container.emplace_back(type, std::string(1, *it));
   ++it;
   return true;
 }

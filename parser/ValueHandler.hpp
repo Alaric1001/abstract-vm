@@ -1,7 +1,6 @@
 #ifndef VALUEHANDLER_HPP
 #define VALUEHANDLER_HPP
 
-
 #include "parser/Handler.hpp"
 #include "parser/Pattern.hpp"
 
@@ -11,9 +10,13 @@ class ValueHandler : public Handler {
  private:
   using LexerToken = lexer::Token::Type;
   static const pattern::Pattern s_pattern;
+  static std::unique_ptr<ValueHandler> s_instance;
 
+  const pattern::Pattern& get_pattern(const lexer::Token&) const override;
+  void do_check(iterator i, iterator end) override;
  public:
-  void check(Handler::iterator i, Handler::iterator end) override;
+
+  static ValueHandler *instance() { return s_instance.get(); }
 };
 
 }  // namespace parser

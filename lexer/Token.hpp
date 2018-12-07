@@ -9,7 +9,7 @@
 namespace lexer {
 class Token : public utils::IDumpable {
  public:
-  enum class Type { Unknown, Blank, Instruction, Value, Newline, Numeric, Punctuation };
+  enum class Type { Unknown, Blank, Instruction, Value, Newline, Numeric, OpeningBrace, ClosingBrace, Dot, Sign };
 
  private:
   Type m_type;
@@ -20,6 +20,7 @@ class Token : public utils::IDumpable {
   Token(const Token&) = default;
   Token(Type, const std::string &);
   Token(Type, std::string &&);
+  Token(Type);
   void dump(std::ostream &, bool verbose = true) const override;
 
   auto type() const { return m_type; }

@@ -2,6 +2,7 @@
 
 namespace lexer {
 Token::Token(Type type, const std::string &val) : m_type(type), m_value(val) {}
+Token::Token(Type type) : m_type(type) {}
 Token::Token(Type type, std::string &&val) : m_type(type), m_value(std::move(val)) {}
 
 void Token::dump(std::ostream &out, bool verbose) const {
@@ -14,7 +15,10 @@ void Token::dump(std::ostream &out, bool verbose) const {
       case Type::Value: out << "VALUE"; break;
       case Type::Newline: out << "NEWLINE"; break;
       case Type::Numeric: out << "NUM"; break;
-      case Type::Punctuation: out << "PUNCT"; break;
+      case Type::OpeningBrace: out << "OBRACE"; break;
+      case Type::ClosingBrace: out << "CBRACE"; break;
+      case Type::Dot: out << "DOT"; break;
+      case Type::Sign: out << "SIGN"; break;
       default: out << "?"; break;
     }
     out << ", ";
