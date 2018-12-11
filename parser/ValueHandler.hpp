@@ -13,7 +13,7 @@ class ValueHandler : public Handler {
   static std::unique_ptr<ValueHandler> s_instance;
 
   const pattern::Pattern& get_pattern(const lexer::Token&) const override;
-  void do_check(iterator i, iterator end) override;
+  void do_check(iterator, iterator, iterator) override {}
  public:
 
   static ValueHandler *instance() { return s_instance.get(); }

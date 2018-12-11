@@ -5,6 +5,7 @@
 
 #include <vector>
 
+#include <iostream>
 namespace parser {
 namespace pattern {
 
@@ -33,9 +34,24 @@ class Eq : public Token {
       : Token(optional), m_ref(ref) {}
 
   bool operator==(const lexer::Token& token) const override;
+  bool operator==(const Eq& token) const;
+
+  auto ref() const { return m_ref; }
 };
 
-using Pattern = std::vector<std::unique_ptr<Token>>;
+using Pattern = std::vector<const Token*>;
+
+template <typename T, typename... E>
+const Token* get_token(E... args) {
+  static std::vector<std::unique_ptr<T>> instances;
+
+  std::unique_ptr<T> o = std::make_unique<T>(std::forward<E>(args)...);
+  for (const auto& e : instances) {
+    if (*e == *o) return e.get();
+  }
+  instances.push_back(std::move(o));
+  return instances.back().get();
+}
 
 }  // namespace pattern
 }  // namespace parser

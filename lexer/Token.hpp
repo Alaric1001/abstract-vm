@@ -9,7 +9,18 @@
 namespace lexer {
 class Token : public utils::IDumpable {
  public:
-  enum class Type { Unknown, Blank, Instruction, Value, Newline, Numeric, OpeningBrace, ClosingBrace, Dot, Sign };
+  enum class Type {
+    Unknown,
+    Blank,
+    Instruction,
+    Value,
+    Newline,
+    Numeric,
+    OpeningBrace,
+    ClosingBrace,
+    Dot,
+    Sign
+  };
 
  private:
   Type m_type;
@@ -17,7 +28,7 @@ class Token : public utils::IDumpable {
 
  public:
   Token() = default;
-  Token(const Token&) = default;
+  Token(const Token &) = default;
   Token(Type, const std::string &);
   Token(Type, std::string &&);
   Token(Type);

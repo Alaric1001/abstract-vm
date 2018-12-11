@@ -7,11 +7,8 @@ bool Eq::operator==(const lexer::Token& token) const {
   return m_ref == token.type();
 }
 
-bool Or::operator==(const lexer::Token& token) const {
-  for (const auto& ref : m_refs) {
-    if (*ref == token) return true;
-  }
-  return false;
+bool Eq::operator==(const Eq& token) const {
+  return m_ref == token.ref() && this->optional() == token.optional();
 }
 
 }  // namespace pattern

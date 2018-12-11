@@ -6,27 +6,28 @@ namespace parser {
 void Handler::check(iterator i, iterator end) {
   assert(i != end);
   const auto& pattern = get_pattern(*i);
-  for (m_token_processed = 0; m_token_processed < pattern.size();
-       ++m_token_processed) {
-    const auto& ptoken = pattern[m_token_processed];
+  iterator begin = i;
+  m_token_processed = 0;
+  for (const auto* ptoken : pattern) {
     if (i == end) throw ParseError(ParseError::Err::UnexpectedEOF);
-    if (ptoken->optional()) {
-      if (*ptoken == *i)
-        ++i;
-      else
-        --m_token_processed;
-    } else {
-      if (*ptoken != *i) throw ParseError(ParseError::Err::UnexpectedToken);
-      ++i;
-    }
-
     try {
-      do_check(i, end);
-    } catch (std::exception& e) {
+      do_check(begin, i, end);
+      if (m_token_processed) {
+        i += m_token_processed;
+        m_token_processed = 0;
+        continue;
+      }
+    } catch (const ParseError& e) {
       throw e;
     }
-    ++m_token_processed;
+    if (ptoken->optional()) {
+      if (*ptoken == *i) ++i;
+    } else {
+      if (*ptoken != *i) throw ParseError(ParseError::Err::UnexpectedToken, *i);
+      ++i;
+    }
   }
+  m_token_processed = i - begin;
 }
 
 }  // namespace parser

@@ -114,10 +114,16 @@ Test(lexer, comments) {
 }
 
 Test(lexer, punctuation) {
-  const char symbols[] = "().+-";
-  std::stringstream input(symbols);
-  auto res = lexer::lexe(input);
-  for (int i = 0; symbols[i]; ++i)
-    cr_assert(res[i] ==
-              Token(Token::Type::Punctuation, std::string(1, symbols[i])));
+  {
+    std::stringstream input("()");
+    auto res = lexer::lexe(input);
+    cr_assert(res[0] == Token(Token::Type::OpeningBrace, "("));
+    cr_assert(res[1] == Token(Token::Type::ClosingBrace, ")"));
+  }
+ // const char symbols[] = "().+-";
+ // std::stringstream input(symbols);
+ // auto res = lexer::lexe(input);
+ // for (int i = 0; symbols[i]; ++i)
+ //   cr_assert(res[i] ==
+ //             Token(Token::Type::Punctuation, std::string(1, symbols[i])));
 }

@@ -6,8 +6,13 @@
 #include <deque>
 #include <vector>
 
+namespace exec {
+  class IExecElem {};
+}
+
 namespace parser {
-std::vector<int> parse(const std::deque<lexer::Token> &);
+bool syntax_checks(const std::deque<lexer::Token> &tokens);
+std::unique_ptr<const exec::IExecElem> parse_line(std::deque<lexer::Token> &);
 }  // namespace parser
 
 #endif  // PARSER_HPP
