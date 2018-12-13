@@ -13,11 +13,14 @@ class IOperand {
   virtual int get_precision() const = 0;
   virtual OperandType get_type() const = 0;
 
-  virtual Ptr operator+(IOperand const &rhs) const = 0;
-  virtual Ptr operator-(IOperand const &rhs) const = 0;
-  virtual Ptr operator*(IOperand const &rhs) const = 0;
-  virtual Ptr operator/(IOperand const &rhs) const = 0;
-  virtual Ptr operator%(IOperand const &rhs) const = 0;
+  virtual Ptr operator+(const IOperand &rhs) const = 0;
+  virtual Ptr operator-(const IOperand &rhs) const = 0;
+  virtual Ptr operator*(const IOperand &rhs) const = 0;
+  virtual Ptr operator/(const IOperand &rhs) const = 0;
+  virtual Ptr operator%(const IOperand &rhs) const = 0;
+
+  virtual bool operator==(const IOperand &rhs) const = 0;
+  virtual bool operator!=(const IOperand &rhs) const = 0;
 
   virtual const std::string &to_string() const = 0;
 

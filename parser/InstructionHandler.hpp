@@ -9,12 +9,15 @@ namespace parser {
 
 class InstructionHandler : public Handler {
  private:
-  static const std::unique_ptr<InstructionHandler> s_instance;
+  static InstructionHandler s_instance;
   const pattern::Pattern& get_pattern(const lexer::Token&) const override;
   void do_check(iterator begin, iterator i, iterator end) override;
- public:
 
-  static InstructionHandler *instance() { return s_instance.get(); }
+ public:
+  std::unique_ptr<const exec::IExecElem> parse(iterator,
+                                               iterator) const override;
+
+  static InstructionHandler& instance() { return s_instance; }
 };
 
 }  // namespace parser

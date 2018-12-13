@@ -4,21 +4,25 @@
 #include "parser/Handler.hpp"
 #include "parser/Pattern.hpp"
 
+#include "vm/ExecActions.hpp"
+
 namespace parser {
 
 class ValueHandler : public Handler {
  private:
   using LexerToken = lexer::Token::Type;
   static const pattern::Pattern s_pattern;
-  static std::unique_ptr<ValueHandler> s_instance;
+  static ValueHandler s_instance;
 
   const pattern::Pattern& get_pattern(const lexer::Token&) const override;
   void do_check(iterator, iterator, iterator) override {}
- public:
 
-  static ValueHandler *instance() { return s_instance.get(); }
+ public:
+  std::unique_ptr<const exec::IExecElem> parse(iterator,
+                                               iterator) const override;
+  static ValueHandler& instance() { return s_instance; }
 };
 
 }  // namespace parser
 
-#endif // VALUEHANDLER_HPP
+#endif  // VALUEHANDLER_HPP

@@ -3,6 +3,7 @@
 #define HANDLER_HPP
 
 #include "lexer/Token.hpp"
+#include "vm/IExecElems.hpp"
 #include "parser/Pattern.hpp"
 
 #include <deque>
@@ -21,7 +22,7 @@ class Handler {
  public:
   virtual ~Handler() = default;
   void check(iterator i, iterator end);
-  virtual std::unique_ptr<const exec::IExecElem> parse() const = 0;
+  virtual std::unique_ptr<const exec::IExecElem> parse(iterator, iterator) const = 0;
 
   auto token_processed() const { return m_token_processed; }
 

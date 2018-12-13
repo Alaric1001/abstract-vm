@@ -3,13 +3,15 @@
 
 #include "vm/IOperand.hpp"
 
-#include "vm/OperandFactory.hpp"
+#include "utils/RuntimeError.hpp"
 #include "utils/to_numeric.hpp"
+#include "vm/OperandFactory.hpp"
 
 #include <cstdint>
 #include <sstream>
 
 namespace exec {
+
 template <typename T>
 class Operand : public IOperand {
  private:
@@ -17,11 +19,11 @@ class Operand : public IOperand {
   T m_val;
   const std::string m_string_val;
 
-  Ptr op(const IOperand &rhs, std::function<T(T lhs, T rhs)> f) {
+  Ptr op(const IOperand &rhs, std::function<T(T lhs, T rhs)> f) const {
     T v = utils::to_numeric<T>(rhs.to_string());
-    std::string s_v = std::to_string(f(m_val, v));
     if (get_precision() < rhs.get_precision())
-      return OperandFactory::instance().create_operand(s_type, s_v);
+      return std::make_unique<Operand<T>>(f(m_val, v));
+    std::string s_v = std::to_string(f(m_val, v));
     return OperandFactory::instance().create_operand(rhs.get_type(), s_v);
   }
 
@@ -46,14 +48,24 @@ class Operand : public IOperand {
 
   IOperand::Ptr operator/(const IOperand &rhs) const override {
     if (rhs.to_string() == "0")
-      throw DivisionByZero(); 
+      throw utils::DivisionByZero(utils::DivisionByZero::Type::Div);
     return op(rhs, [](T lhs, T rhs) -> T { return lhs / rhs; });
   }
-  
+
   IOperand::Ptr operator%(const IOperand &rhs) const override {
     if (rhs.to_string() == "0")
-      throw DivisionByZero(); 
-    return op(rhs, [](T lhs, T rhs) -> T { return lhs % rhs; });
+      throw utils::DivisionByZero(utils::DivisionByZero::Type::Mod);
+    return op(rhs, [](T lhs, T rhs) -> T {
+      return static_cast<intmax_t>(lhs) % static_cast<intmax_t>(rhs);
+    });
+  }
+
+  bool operator==(const IOperand &rhs) const override {
+    return s_type == rhs.get_type() and m_string_val == rhs.to_string();
+  }
+
+  bool operator!=(const IOperand &rhs) const override {
+    return not operator==(rhs);
   }
 
   const std::string &to_string() const override { return m_string_val; }

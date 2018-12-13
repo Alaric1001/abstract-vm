@@ -1,16 +1,21 @@
 #include "lexer/lexer.hpp"
 #include "parser/parser.hpp"
 #include "utils/Dump.hpp"
+#include "utils/Stack.hpp"
+#include "vm/IOperand.hpp"
 
 #include <sstream>
 #include <iostream>
 
 int main() {
-  //std::stringstream input(" int32(543.3). push;   a\n;\n\nexit");
-  std::stringstream input("; -------------\n; exemple.avm -\n; -------------\n\npush int32(42)\npush int32(33)\n\nadd\n\npush float(44.55)\n\nmul\n   \n push double(42.42) \npush int32(42)\n\ndump\n\npop\n\nassert double(42.42)\n\nexit");
+  utils::Stack<std::unique_ptr<const exec::IOperand>> stack;
+  std::stringstream input("  exit \n push double(+.6)\n assert double(0.6)\npush int8(-3)\ndump");
   auto container = lexer::lexe(input);
   std::cout << "Lexed tokens (s=" << container.size() << ") = ";
   utils::dump_objects(std::cout, container);
-  std::cout << std::endl;
-  parser::parse(container);
+  parser::syntax_checks(container);
+  while (not container.empty())
+    parser::parse_line(container)->execute(stack);
+  std::cout << "Lexed tokens (s=" << container.size() << ") = ";
+  utils::dump_objects(std::cout, container);
 }

@@ -2,6 +2,9 @@
 #include "parser/Errors.hpp"
 #include "parser/ValueHandler.hpp"
 
+#include "utils/static_uptr_cast.hpp"
+#include "vm/ExecActions.hpp"
+
 #include <cassert>
 #include <memory>
 
@@ -34,16 +37,26 @@ const pattern::Pattern &InstructionHandler::get_pattern(
 void InstructionHandler::do_check(Handler::iterator, Handler::iterator i,
                                   Handler::iterator end) {
   if (i->type() != lexer::Token::Type::Value) return;
-  auto *val_handler = ValueHandler::instance();
+  auto &val_handler = ValueHandler::instance();
   try {
-    val_handler->check(i, end);
-    m_token_processed += val_handler->token_processed();
+    val_handler.check(i, end);
+    m_token_processed += val_handler.token_processed();
   } catch (const ParseError &e) {
     throw e;
   }
 }
 
-const std::unique_ptr<InstructionHandler> InstructionHandler::s_instance =
-    std::make_unique<InstructionHandler>();
+std::unique_ptr<const exec::IExecElem> InstructionHandler::parse(
+    Handler::iterator it, Handler::iterator end) const {
+  auto simple_action = exec::ExecSimpleAction::create(it->value());
+  if (simple_action) return simple_action;
+  auto elem = ValueHandler::instance().parse(it + 2, end);
+  auto operand =
+      utils::static_uptr_cast<const exec::IExecElem, const exec::ExecOperand>(
+          std::move(elem));
+  return exec::ExecValueAction::create(it->value(), std::move(operand));
+}
+
+InstructionHandler InstructionHandler::s_instance = InstructionHandler();
 
 }  // namespace parser

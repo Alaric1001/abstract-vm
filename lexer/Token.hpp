@@ -24,7 +24,7 @@ class Token : public utils::IDumpable {
 
  private:
   Type m_type;
-  const std::string m_value;
+  std::string m_value;
 
  public:
   Token() = default;
