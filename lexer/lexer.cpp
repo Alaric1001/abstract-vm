@@ -3,6 +3,7 @@
 #include "lexer/punctuation.hpp"
 
 #include <algorithm>
+#include <functional>
 #include <array>
 #include <cctype>
 #include <iostream>

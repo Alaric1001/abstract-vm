@@ -2,6 +2,8 @@
 
 #include "vm/Operand.hpp"
 
+#include <functional>
+
 template <typename T>
 exec::IOperand::Ptr create_operand(double val) {
   return std::make_unique<exec::Operand<T>>(static_cast<T>(val));

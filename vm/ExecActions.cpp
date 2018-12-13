@@ -1,10 +1,12 @@
 #include "vm/ExecActions.hpp"
 
 #include "vm/OperandFactory.hpp"
+#include "vm/globals.hpp"
 
 #include <map>
-
+#include <cassert>
 #include <iostream>
+
 namespace exec {
 
 ExecSimpleAction::ExecSimpleAction(const _private_key&, const Action& action)
@@ -18,8 +20,16 @@ void exit(Stack&) {
 }
 
 void dump(Stack& s) {
+  if (s.empty())
+  {
+    std::cout << "- Stack is empty -\n";
+    return;
+  }
+  std::cout << "- Stack of size " << s.size() << " -\n";
   s.iterate([](const std::unique_ptr<const IOperand>& e) {
-    std::cout << e->to_string() << "\n";
+      int i = static_cast<int>(e->get_type());
+      assert(i < globals::operand_count);
+    std::cout << "- " << globals::operand_names[i] << '(' << e->to_string() << ')' << "\n";
   });
 }
 

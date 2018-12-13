@@ -1,6 +1,8 @@
 #include "parser/Handler.hpp"
 #include "parser/Errors.hpp"
 
+#include <cassert>
+
 namespace parser {
 
 void Handler::check(iterator i, iterator end) {

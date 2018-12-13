@@ -4,6 +4,7 @@
 
 #include "utils/static_uptr_cast.hpp"
 
+#include <cassert>
 #include <iostream>
 
 namespace parser {

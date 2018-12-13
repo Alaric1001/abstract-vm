@@ -1,4 +1,6 @@
 #include "parser/ValueHandler.hpp"
+
+#include "vm/globals.hpp"
 #include <cassert>
 
 namespace parser {
@@ -31,10 +33,9 @@ const pattern::Pattern &ValueHandler::get_pattern(const lexer::Token &t) const {
 
 std::unique_ptr<const exec::IExecElem> ValueHandler::parse(
     Handler::iterator it, Handler::iterator) const {
-  static const char *types[5] = { "int8", "int16", "int32", "float", "double" };
   exec::IOperand::OperandType optype;
-  for (int i = 0; i < 5; ++i) {
-    if (it->value() == types[i]) {
+  for (int i = 0; i < globals::operand_count; ++i) {
+    if (it->value() == globals::operand_names[i]) {
       optype = static_cast<exec::IOperand::OperandType>(i);
       break;
     }

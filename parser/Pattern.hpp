@@ -4,6 +4,7 @@
 #include "lexer/Token.hpp"
 
 #include <vector>
+#include <memory>
 
 #include <iostream>
 namespace parser {

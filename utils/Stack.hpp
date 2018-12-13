@@ -1,10 +1,10 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 
-#include <vector>
-
 #include "utils/RuntimeError.hpp"
 
+#include <vector>
+#include <functional>
 namespace utils {
 
 template <typename T>
@@ -14,11 +14,11 @@ class Stack {
   using const_iterator = typename Container::const_iterator;
 
  private:
-  static constexpr size_t size = 4096 / sizeof(T);
+  static constexpr size_t max_size = 4096 / sizeof(T);
   Container m_container;
 
  public:
-  explicit Stack() { m_container.reserve(size); }
+  explicit Stack() { m_container.reserve(max_size); }
   Stack(const Stack&) = delete;
 
   T& top() { return m_container.back(); }
@@ -26,8 +26,10 @@ class Stack {
 
   bool empty() const { return m_container.empty(); }
 
+  auto size() const {return m_container.size(); }
+
   void push(T&& value) {
-    if (m_container.size() == size - 1) throw RuntimeError("Stack overflow");
+    if (m_container.size() == max_size - 1) throw RuntimeError("Stack overflow");
     m_container.push_back(std::move(value));
   }
 

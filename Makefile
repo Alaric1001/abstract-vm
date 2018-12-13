@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/22 10:52:15 by asenat            #+#    #+#              #
-#    Updated: 2018/12/13 14:32:25 by asenat           ###   ########.fr        #
+#    Updated: 2018/12/13 23:20:52 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,4 +83,4 @@ re: fclean all
 
 .PHONY: makedeps
 makedeps:
-	python3.7 ./gen_make_sources.py --source='.cpp' $(SRC_DIRS)
+	python3.6 ./gen_make_sources.py --source='.cpp' $(SRC_DIRS)

@@ -8,6 +8,7 @@
 #include "vm/OperandFactory.hpp"
 
 #include <cstdint>
+#include <functional>
 #include <sstream>
 
 namespace exec {
