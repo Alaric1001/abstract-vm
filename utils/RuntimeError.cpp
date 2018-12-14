@@ -1,9 +1,15 @@
 #include "utils/RuntimeError.hpp"
 
+#include "vm/globals.hpp"
+
+#include <sstream>
+
 namespace utils {
 // RuntimeError
-RuntimeError::RuntimeError(const char* s) : m_error("Runtime Error: ") {
-  m_error += s;
+RuntimeError::RuntimeError(const char* s) {
+  std::stringstream ss;
+  ss << "Runtime Error L." << globals::LineCounter::count() << ": " << s;
+  m_error = ss.str();
 }
 
 const char *RuntimeError::what() const noexcept { return m_error.c_str(); }

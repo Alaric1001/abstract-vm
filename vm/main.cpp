@@ -4,21 +4,25 @@
 #include "utils/Stack.hpp"
 #include "vm/IOperand.hpp"
 
-#include <sstream>
+#include "vm/globals.hpp"
+
 #include <iostream>
+#include <sstream>
 
 int main() {
   utils::Stack<std::unique_ptr<const exec::IOperand>> stack;
-  std::stringstream input("push int8(126)\npush int32(2)\n add\ndump\n exit");
+  std::stringstream input(
+      "\n\n \npush int8(126)  \n\n\npush int32(0)\n mod\ndump\n exit");
   auto container = lexer::lexe(input);
   std::cout << "Lexed tokens (s=" << container.size() << ") = ";
   utils::dump_objects(std::cout, container);
-  parser::syntax_checks(container);
+  if (not parser::syntax_checks(container)) return (1);
+  globals::LineCounter::reset();
   while (not container.empty()) {
     try {
-    parser::parse_line(container)->execute(stack);
+      parser::parse_and_exec_line(container, stack);
     } catch (utils::RuntimeError &e) {
-      std::cerr<< e.what()<<"\n";
+      std::cerr << e.what() << "\n";
       return (1);
     }
   }
