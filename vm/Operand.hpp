@@ -3,9 +3,10 @@
 
 #include "vm/IOperand.hpp"
 
+#include "vm/OperandFactory.hpp"
+
 #include "utils/RuntimeError.hpp"
 #include "utils/to_numeric.hpp"
-#include "vm/OperandFactory.hpp"
 
 #include <cstdint>
 #include <functional>
@@ -69,20 +70,16 @@ class Operand : public IOperand {
     return not operator==(rhs);
   }
 
+  Ptr clone() const override {
+    return std::make_unique<Operand<T>>(m_val);
+  }
+
+  T value() const { return m_val; }
+
   const std::string &to_string() const override { return m_string_val; }
 };
-
-template <>
-IOperand::OperandType Operand<int8_t>::s_type = IOperand::OperandType::Int8;
-template <>
-IOperand::OperandType Operand<int32_t>::s_type = IOperand::OperandType::Int16;
-template <>
-IOperand::OperandType Operand<int64_t>::s_type = IOperand::OperandType::Int32;
-template <>
-IOperand::OperandType Operand<float>::s_type = IOperand::OperandType::Float;
-template <>
-IOperand::OperandType Operand<double>::s_type = IOperand::OperandType::Double;
-
+template <typename T>
+IOperand::OperandType Operand<T>::s_type = IOperand::OperandType::Double;
 }  // namespace exec
 
 #endif  // OPERAND_HPP

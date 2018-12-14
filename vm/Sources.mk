@@ -1,8 +1,9 @@
 ## Auto generated make tool, don't edit manually.
 
-OBJ_FILES_vm := OperandFactory.o \
-                main.o \
+OBJ_FILES_vm := ExecActions.o \
                 globals.o \
-                ExecActions.o
+                main.o \
+                Operand.o \
+                OperandFactory.o
 
 OBJECTS += $(patsubst %, vm/$(OBJECT_DIR)/%, $(OBJ_FILES_vm))
