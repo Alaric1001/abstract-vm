@@ -10,8 +10,7 @@ int8_t to_numeric<int8_t>(const std::string& s) {
   } catch (std::out_of_range &e) {
     throw e;
   }
-  if (v > INT8_MAX) throw std::out_of_range("Overflow");
-  if (v < INT8_MIN) throw std::out_of_range("Underflow");
+  if (v > INT8_MAX or v < INT8_MIN) throw std::out_of_range("");
   return v;
 }
 

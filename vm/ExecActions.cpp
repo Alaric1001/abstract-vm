@@ -28,7 +28,7 @@ void dump(Stack& s) {
   s.iterate([](const std::unique_ptr<const IOperand>& e) {
     int i = static_cast<int>(e->get_type());
     assert(i < globals::operand_count);
-    std::cout << "- " << globals::operand_names[i] << '(' << e->to_string()
+    std::cout << "  " << globals::operand_names[i] << '(' << e->to_string()
               << ')' << "\n";
   });
 }
@@ -52,6 +52,7 @@ void operation(
     Stack& s,
     std::function<IOperand::Ptr(const IOperand&, const IOperand&)> op) {
   if (s.size() < 2) throw utils::RuntimeError("Stack has less than 2 values");
+  //TODO just release the ptr
   auto top = s.top()->clone();
   s.pop();
   try {
@@ -59,6 +60,7 @@ void operation(
     s.pop();
     s.push(std::move(new_elem));
   } catch (utils::RuntimeError& e) {
+    s.push(std::move(top));
     throw e;
   }
 }

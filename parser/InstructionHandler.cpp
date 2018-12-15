@@ -36,6 +36,10 @@ const pattern::Pattern &InstructionHandler::get_pattern(
 
 void InstructionHandler::do_check(Handler::iterator, Handler::iterator i,
                                   Handler::iterator end) {
+  if (i->type() == lexer::Token::Type::Instruction) {
+    m_last_instruction_processed = &(i->value());
+    return ;
+  }
   if (i->type() != lexer::Token::Type::Value) return;
   auto &val_handler = ValueHandler::instance();
   try {
@@ -57,6 +61,11 @@ std::unique_ptr<const exec::IExecElem> InstructionHandler::parse(
   return exec::ExecValueAction::create(it->value(), std::move(operand));
 }
 
+const std::string *InstructionHandler::last_instruction_processed() const {
+  return m_last_instruction_processed;
+}
+
 InstructionHandler InstructionHandler::s_instance = InstructionHandler();
 
+InstructionHandler &InstructionHandler::instance() { return s_instance; }
 }  // namespace parser

@@ -4,13 +4,12 @@
 #include "vm/Operand.hpp"
 
 #include <functional>
-#include <limits>
 
 template <typename T>
 exec::IOperand::Ptr create_operand(double val) {
   if (val > std::numeric_limits<T>::max())
     throw utils::RuntimeError("Numeric overflow");
-  if (val < std::numeric_limits<T>::min())
+  if (val < std::numeric_limits<T>::lowest())
     throw utils::RuntimeError("Numeric underflow");
   return std::make_unique<exec::Operand<T>>(static_cast<T>(val));
 }

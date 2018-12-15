@@ -4,6 +4,7 @@
 #include "lexer/Token.hpp"
 
 #include <exception>
+#include <ostream>
 #include <sstream>
 
 namespace parser {
@@ -17,13 +18,14 @@ class ParseError : public std::exception {
 
  public:
   ParseError() = delete;
-  ParseError(Err err) : m_err(err) {}
-  ParseError(Err err, const lexer::Token &tok) : m_err(err), m_token(&tok) {}
-  const auto *token() const { return m_token; }
-  const char *what() const noexcept {
-    static const char *messages[] = {"Unexpected EOF", "Unexpected token"};
-    return messages[static_cast<int>(m_err)];
-  }
+  ParseError(const ParseError &) = default;
+  ParseError &operator=(const ParseError &) = default;
+
+  ParseError(Err err);
+  ParseError(Err err, const lexer::Token &tok);
+
+  const char *what() const noexcept override;
+  void display_err(std::ostream &os) const;
 };
 }  // namespace parser
 

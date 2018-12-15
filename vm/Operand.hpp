@@ -1,11 +1,10 @@
 #ifndef OPERAND_HPP
 #define OPERAND_HPP
 
-#include "vm/IOperand.hpp"
-
 #include "vm/OperandFactory.hpp"
 
-#include "utils/RuntimeError.hpp"
+
+#include "utils/arithmetic_operations.hpp"
 #include "utils/to_numeric.hpp"
 
 #include <cstdint>
@@ -14,6 +13,8 @@
 
 namespace exec {
 
+namespace {
+
 template <typename T>
 class Operand : public IOperand {
  private:
@@ -21,12 +22,25 @@ class Operand : public IOperand {
   T m_val;
   const std::string m_string_val;
 
-  Ptr op(const IOperand &rhs, std::function<T(T lhs, T rhs)> f) const {
-    T v = utils::to_numeric<T>(rhs.to_string());
-    if (get_precision() < rhs.get_precision())
-      return std::make_unique<Operand<T>>(f(m_val, v));
-    std::string s_v = std::to_string(f(m_val, v));
-    return OperandFactory::instance().create_operand(rhs.get_type(), s_v);
+  Ptr op(const IOperand &rhs, std::function<T(T, T)> f_t, std::function<double(double, double)> f_d) const {
+    if (get_precision() > rhs.get_precision()) {
+      T v = utils::to_numeric<T>(rhs.to_string());
+      try {
+      v = f_t(m_val, v);
+      } catch (utils::RuntimeError&) {throw;}
+      std::string result = std::string(std::to_string(v));
+      return OperandFactory::instance().create_operand(get_type(), result);
+    }
+    double a = utils::to_numeric<double>(rhs.to_string());
+    double b = static_cast<double>(m_val);
+    double res;
+      try {
+       res = f_d(a, b);
+      } catch (utils::RuntimeError&) {throw;}
+      std::string result = std::string(std::to_string(res));
+      return OperandFactory::instance().create_operand(rhs.get_type(), result);
+
+    return nullptr;
   }
 
  public:
@@ -37,29 +51,43 @@ class Operand : public IOperand {
   OperandType get_type() const override { return s_type; }
 
   IOperand::Ptr operator+(const IOperand &rhs) const override {
-    return op(rhs, [](T lhs, T rhs) -> T { return lhs + rhs; });
+    try {
+      return op(rhs, utils::add<T>, utils::add<double>);
+    } catch (utils::RuntimeError &) {
+      throw;
+    }
   }
 
   IOperand::Ptr operator-(const IOperand &rhs) const override {
-    return op(rhs, [](T lhs, T rhs) -> T { return lhs - rhs; });
+    try {
+      return op(rhs, utils::sub<T>, utils::sub<double>);
+    } catch (utils::RuntimeError &) {
+      throw;
+    }
   }
 
   IOperand::Ptr operator*(const IOperand &rhs) const override {
-    return op(rhs, [](T lhs, T rhs) -> T { return lhs * rhs; });
+    try {
+      return op(rhs, utils::mul<T>, utils::mul<double>);
+    } catch (utils::RuntimeError &) {
+      throw;
+    }
   }
 
   IOperand::Ptr operator/(const IOperand &rhs) const override {
-    if (rhs.to_string() == "0")
-      throw utils::DivisionByZero(utils::DivisionByZero::Type::Div);
-    return op(rhs, [](T lhs, T rhs) -> T { return lhs / rhs; });
+    try {
+      return op(rhs, utils::div<T>, utils::div<double>);
+    } catch (utils::RuntimeError &) {
+      throw;
+    }
   }
 
   IOperand::Ptr operator%(const IOperand &rhs) const override {
-    if (rhs.to_string() == "0")
-      throw utils::DivisionByZero(utils::DivisionByZero::Type::Mod);
-    return op(rhs, [](T lhs, T rhs) -> T {
-      return static_cast<intmax_t>(lhs) % static_cast<intmax_t>(rhs);
-    });
+    try {
+      return op(rhs, utils::mod<T>, utils::mod<double>);
+    } catch (utils::RuntimeError &) {
+      throw;
+    }
   }
 
   bool operator==(const IOperand &rhs) const override {
@@ -70,9 +98,7 @@ class Operand : public IOperand {
     return not operator==(rhs);
   }
 
-  Ptr clone() const override {
-    return std::make_unique<Operand<T>>(m_val);
-  }
+  Ptr clone() const override { return std::make_unique<Operand<T>>(m_val); }
 
   T value() const { return m_val; }
 

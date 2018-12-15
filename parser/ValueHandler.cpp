@@ -20,9 +20,9 @@ const pattern::Pattern double_pattern{
     pattern::get_token<pattern::Eq>(LexerToken::Value),
     pattern::get_token<pattern::Eq>(LexerToken::OpeningBrace),
     pattern::get_token<pattern::Eq>(LexerToken::Sign, true),
-    pattern::get_token<pattern::Eq>(LexerToken::Numeric, true),
-    pattern::get_token<pattern::Eq>(LexerToken::Dot),
     pattern::get_token<pattern::Eq>(LexerToken::Numeric),
+    pattern::get_token<pattern::Eq>(LexerToken::Dot, true),
+    pattern::get_token<pattern::Eq>(LexerToken::Numeric, true),
     pattern::get_token<pattern::Eq>(LexerToken::ClosingBrace),
 };
 

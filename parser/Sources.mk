@@ -1,6 +1,7 @@
 ## Auto generated make tool, don't edit manually.
 
-OBJ_FILES_parser := Handler.o \
+OBJ_FILES_parser := Errors.o \
+                    Handler.o \
                     InstructionHandler.o \
                     parser.o \
                     Pattern.o \

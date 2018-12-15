@@ -10,6 +10,7 @@
 namespace lexer {
 
 std::deque<Token> lexe(std::istream &);
+void lexe_line(const std::string &line, std::deque<Token> &container);
 
 } // namespace lexer
 #endif // LEXE_HPP
