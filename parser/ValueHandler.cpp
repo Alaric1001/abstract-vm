@@ -1,7 +1,7 @@
 #include "parser/ValueHandler.hpp"
 
-#include "vm/globals.hpp"
 #include <cassert>
+#include "vm/globals.hpp"
 
 namespace parser {
 
@@ -30,6 +30,7 @@ const pattern::Pattern &ValueHandler::get_pattern(const lexer::Token &t) const {
   if (t.value() != "float" and t.value() != "double") return int_pattern;
   return double_pattern;
 }
+void ValueHandler::do_check(Handler::iterator, Handler::iterator) {}
 
 std::unique_ptr<const exec::IExecElem> ValueHandler::parse(
     Handler::iterator it, Handler::iterator) const {
@@ -43,9 +44,9 @@ std::unique_ptr<const exec::IExecElem> ValueHandler::parse(
   }
   std::string val;
   ++it;
-  while ((++it)->type() != lexer::Token::Type::ClosingBrace)
-    val += it->value();
+  while ((++it)->type() != lexer::Token::Type::ClosingBrace) val += it->value();
   return std::make_unique<exec::ExecOperand>(std::move(val), optype);
 }
 
+ValueHandler &ValueHandler::instance() { return s_instance; }
 }  // namespace parser

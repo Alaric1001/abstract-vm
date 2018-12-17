@@ -1,5 +1,5 @@
-#ifndef GET_INVALID_VALUE_EXCEPTION_HPP
-#define GET_INVALID_VALUE_EXCEPTION_HPP
+#ifndef GET_INVALID_OPERATION_EXCEPTION_HPP
+#define GET_INVALID_OPERATION_EXCEPTION_HPP
 
 #include "utils/RuntimeError.hpp"
 #include "utils/operation_state.hpp"

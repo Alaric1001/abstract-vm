@@ -1,4 +1,4 @@
-#include "utils/get_invalid_value_exception.hpp"
+#include "utils/get_invalid_operation_exception.hpp"
 
 #include <cassert>
 

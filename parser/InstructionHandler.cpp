@@ -34,7 +34,7 @@ const pattern::Pattern &InstructionHandler::get_pattern(
   return instr_value_pattern;
 }
 
-void InstructionHandler::do_check(Handler::iterator, Handler::iterator i,
+void InstructionHandler::do_check(Handler::iterator i,
                                   Handler::iterator end) {
   if (i->type() == lexer::Token::Type::Instruction) {
     m_last_instruction_processed = &(i->value());
@@ -45,8 +45,8 @@ void InstructionHandler::do_check(Handler::iterator, Handler::iterator i,
   try {
     val_handler.check(i, end);
     m_token_processed += val_handler.token_processed();
-  } catch (const ParseError &e) {
-    throw e;
+  } catch (ParseError &) {
+    throw;
   }
 }
 

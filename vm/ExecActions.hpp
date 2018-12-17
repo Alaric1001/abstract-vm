@@ -28,6 +28,8 @@ class ExecSimpleAction : public IExecAction {
  public:
   ExecSimpleAction() = delete;
   ExecSimpleAction(const ExecSimpleAction &) = delete;
+  ExecSimpleAction& operator=(const ExecSimpleAction &) = delete;
+
   explicit ExecSimpleAction(const _private_key &, const Action &action);
 
   void execute(Stack &) const override;
@@ -44,6 +46,7 @@ class ExecValueAction : public IExecAction {
  public:
   ExecValueAction() = delete;
   ExecValueAction(const ExecValueAction &) = delete;
+  ExecValueAction &operator=(const ExecValueAction &) = delete;
   explicit ExecValueAction(const _private_key &, const Action &,
                            std::unique_ptr<const ExecOperand> &&);
 

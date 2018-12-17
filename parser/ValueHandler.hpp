@@ -15,12 +15,12 @@ class ValueHandler : public Handler {
   static ValueHandler s_instance;
 
   const pattern::Pattern& get_pattern(const lexer::Token&) const override;
-  void do_check(iterator, iterator, iterator) override {}
+  void do_check(iterator, iterator) override;
 
  public:
   std::unique_ptr<const exec::IExecElem> parse(iterator,
                                                iterator) const override;
-  static ValueHandler& instance() { return s_instance; }
+  static ValueHandler& instance();
 };
 
 }  // namespace parser

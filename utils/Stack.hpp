@@ -19,7 +19,8 @@ class Stack {
 
  public:
   explicit Stack() { m_container.reserve(max_size); }
-  Stack(const Stack&) = delete;
+  Stack(const Stack<T>&) = delete;
+  Stack& operator=(const Stack<T>&) = delete;
 
   T& top() { return m_container.back(); }
   const T& top() const { return m_container.back(); }
@@ -29,7 +30,7 @@ class Stack {
   auto size() const {return m_container.size(); }
 
   void push(T&& value) {
-    if (m_container.size() == max_size - 1) throw RuntimeError("Stack overflow");
+    if (m_container.size() == max_size) throw RuntimeError("Stack overflow");
     m_container.push_back(std::move(value));
   }
 

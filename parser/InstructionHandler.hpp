@@ -14,7 +14,7 @@ class InstructionHandler : public Handler {
   const std::string *m_last_instruction_processed = nullptr;
 
   const pattern::Pattern& get_pattern(const lexer::Token&) const override;
-  void do_check(iterator begin, iterator i, iterator end) override;
+  void do_check(iterator i, iterator end) override;
 
   explicit InstructionHandler() = default;
   InstructionHandler &operator=(const InstructionHandler&) = default;

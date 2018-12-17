@@ -3,7 +3,6 @@
 
 #include "vm/OperandFactory.hpp"
 
-
 #include "utils/arithmetic_operations.hpp"
 #include "utils/to_numeric.hpp"
 
@@ -13,8 +12,6 @@
 
 namespace exec {
 
-namespace {
-
 template <typename T>
 class Operand : public IOperand {
  private:
@@ -22,29 +19,34 @@ class Operand : public IOperand {
   T m_val;
   const std::string m_string_val;
 
-  Ptr op(const IOperand &rhs, std::function<T(T, T)> f_t, std::function<double(double, double)> f_d) const {
-    if (get_precision() > rhs.get_precision()) {
+  Ptr op(const IOperand &rhs, std::function<T(T, T)> f_t,
+         std::function<double(double, double)> f_d) const {
+    if (get_precision() >= rhs.get_precision()) {
       T v = utils::to_numeric<T>(rhs.to_string());
       try {
-      v = f_t(m_val, v);
-      } catch (utils::RuntimeError&) {throw;}
+        v = f_t(m_val, v);
+      } catch (utils::RuntimeError &) {
+        throw;
+      }
       std::string result = std::string(std::to_string(v));
       return OperandFactory::instance().create_operand(get_type(), result);
     }
-    double a = utils::to_numeric<double>(rhs.to_string());
-    double b = static_cast<double>(m_val);
+    double a = static_cast<double>(m_val);
+    double b = utils::to_numeric<double>(rhs.to_string());
     double res;
-      try {
-       res = f_d(a, b);
-      } catch (utils::RuntimeError&) {throw;}
-      std::string result = std::string(std::to_string(res));
-      return OperandFactory::instance().create_operand(rhs.get_type(), result);
-
-    return nullptr;
+    try {
+      res = f_d(a, b);
+    } catch (utils::RuntimeError &) {
+      throw;
+    }
+    std::string result = std::string(std::to_string(res));
+    return OperandFactory::instance().create_operand(rhs.get_type(), result);
   }
 
  public:
   Operand() = delete;
+  Operand(const Operand&) = delete;
+  Operand& operator=(const Operand&) = delete;
   Operand(T val) : m_val(val), m_string_val(std::to_string(val)) {}
 
   int get_precision() const override { return static_cast<int>(s_type); }
@@ -98,12 +100,11 @@ class Operand : public IOperand {
     return not operator==(rhs);
   }
 
-  Ptr clone() const override { return std::make_unique<Operand<T>>(m_val); }
-
   T value() const { return m_val; }
 
   const std::string &to_string() const override { return m_string_val; }
 };
+
 template <typename T>
 IOperand::OperandType Operand<T>::s_type = IOperand::OperandType::Double;
 }  // namespace exec

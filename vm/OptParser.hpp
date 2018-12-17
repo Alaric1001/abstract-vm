@@ -17,7 +17,7 @@ class OptParser {
    public:
     UnknownOpt() = default;
     UnknownOpt(const UnknownOpt &) = default;
-    UnknownOpt &operator=(const UnknownOpt &) = default;
+    UnknownOpt &operator=(const UnknownOpt &) = delete;
     const char *what() const noexcept override;
   };
 

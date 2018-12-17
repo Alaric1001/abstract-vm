@@ -1,10 +1,11 @@
 ## Auto generated make tool, don't edit manually.
 
-OBJ_FILES_vm := OperandFactory.o \
-                main.o \
-                OptParser.o \
-                Operand.o \
+OBJ_FILES_vm := ExecActions.o \
                 globals.o \
-                ExecActions.o
+                IExecElems.o \
+                main.o \
+                Operand.o \
+                OperandFactory.o \
+                OptParser.o
 
 OBJECTS += $(patsubst %, vm/$(OBJECT_DIR)/%, $(OBJ_FILES_vm))

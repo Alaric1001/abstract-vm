@@ -25,8 +25,6 @@ class IOperand {
 
   virtual const std::string &to_string() const = 0;
 
-  virtual Ptr clone() const = 0;
-
   virtual ~IOperand() = default;
 };
 }  // namespace exec

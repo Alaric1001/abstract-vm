@@ -29,13 +29,15 @@ class Token : public utils::IDumpable {
  public:
   Token() = default;
   Token(const Token &) = default;
+  Token& operator=(const Token &) = default;
+
   Token(Type, const std::string &);
   Token(Type, std::string &&);
   Token(Type);
   void dump(std::ostream &, bool verbose = true) const override;
 
-  auto type() const { return m_type; }
-  const auto &value() const { return m_value; }
+  Type type() const;
+  const std::string &value() const; 
 
   bool operator==(const Token &) const;
 };

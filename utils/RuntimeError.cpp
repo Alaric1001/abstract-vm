@@ -5,7 +5,9 @@
 #include <sstream>
 
 namespace utils {
+
 // RuntimeError
+
 RuntimeError::RuntimeError(const char* s) {
   std::stringstream ss;
   ss << "Runtime Error L." << globals::LineCounter::count() << ": " << s;

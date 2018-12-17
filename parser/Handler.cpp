@@ -13,14 +13,14 @@ void Handler::check(iterator i, iterator end) {
   for (const auto* ptoken : pattern) {
     if (i == end) throw ParseError(ParseError::Err::UnexpectedEOF);
     try {
-      do_check(begin, i, end);
+      do_check(i, end);
       if (m_token_processed) {
         i += m_token_processed;
         m_token_processed = 0;
         continue;
       }
-    } catch (const ParseError& e) {
-      throw e;
+    } catch (ParseError&) {
+      throw;
     }
     if (ptoken->optional()) {
       if (*ptoken == *i) ++i;
@@ -31,5 +31,7 @@ void Handler::check(iterator i, iterator end) {
   }
   m_token_processed = i - begin;
 }
+
+  std::size_t Handler::token_processed() const { return m_token_processed; }
 
 }  // namespace parser

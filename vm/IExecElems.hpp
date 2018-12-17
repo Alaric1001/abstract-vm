@@ -18,13 +18,14 @@ class ExecOperand : public IExecElem {
 
  public:
   ExecOperand() = delete;
-  ExecOperand(std::string &&val, IOperand::OperandType type)
-      : m_value(std::move(val)), m_type(type) {}
-  ExecOperand(const std::string &val, IOperand::OperandType type)
-      : m_value(val), m_type(type) {}
+  ExecOperand(const ExecOperand&) = delete;
+  ExecOperand &operator=(const ExecOperand&) = delete;
 
-  const auto &value() const { return m_value; }
-  auto type() const { return m_type; }
+  ExecOperand(std::string &&val, IOperand::OperandType type);
+  ExecOperand(const std::string &val, IOperand::OperandType type);
+
+  const std::string &value() const;
+  decltype(m_type) type() const;
 };
 
 }  // namespace exec

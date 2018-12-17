@@ -28,10 +28,9 @@ IOperand::Ptr OperandFactory::create_operand(IOperand::OperandType type,
   IOperand::Ptr ret;
   try {
     ret = arr[static_cast<int>(type)](std::stod(v));
-  } catch (utils::RuntimeError& e) {
-    throw e;
-  }
-  catch (std::out_of_range& e) {
+  } catch (utils::RuntimeError&) {
+    throw;
+  } catch (std::out_of_range& e) {
     throw utils::RuntimeError(e.what());
   }
   return ret;

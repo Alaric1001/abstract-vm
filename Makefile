@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/22 10:52:15 by asenat            #+#    #+#              #
-#    Updated: 2018/12/13 23:20:52 by asenat           ###   ########.fr        #
+#    Updated: 2018/12/17 17:02:20 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 .SUFFIXES:
 NAME		:= abstract-vm
 CC 		:= clang++
-CFLAGS		:= -I. -Wall -Wextra -Werror -std='c++17' -g
+CFLAGS		:= -I. -Wall -Wextra -Werror -std='c++14' -O2
 RM		:= rm -f
 OBJECT_DIR	:= obj
 COMP		:= $(CC) $(CFLAGS) -c -o
@@ -53,6 +53,7 @@ OBJ_DIRS	:= $(patsubst %, %/obj, $(SRC_DIRS))
 
 $(NAME): $(OBJ_DIRS) $(OBJECTS) $(IMPL_OBJS)
 	$(CC) $(LFLAGS) -o $(NAME) $(OBJECTS) $(IMPL_OBJS)
+	strip -x $(NAME)
 	@$(ECHO) $(PNAME)$(GREEN) "linking complete"$(RESET)
 
 ## Including compilation rules

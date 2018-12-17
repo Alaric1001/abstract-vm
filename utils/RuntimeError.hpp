@@ -11,8 +11,10 @@ class RuntimeError : public std::exception {
  private:
   std::string m_error;
 
+  RuntimeError &operator=(const RuntimeError&) = delete;
  public:
   RuntimeError() = delete;
+  RuntimeError(const RuntimeError&) = default;
   RuntimeError(const char *);
   const char *what() const noexcept override;
 };

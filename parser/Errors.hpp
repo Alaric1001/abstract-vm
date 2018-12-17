@@ -19,7 +19,7 @@ class ParseError : public std::exception {
  public:
   ParseError() = delete;
   ParseError(const ParseError &) = default;
-  ParseError &operator=(const ParseError &) = default;
+  ParseError &operator=(const ParseError &) = delete;
 
   ParseError(Err err);
   ParseError(Err err, const lexer::Token &tok);

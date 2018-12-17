@@ -26,6 +26,8 @@ void Token::dump(std::ostream &out, bool verbose) const {
   out << '"' << m_value << "\"]";
 }
 
+Token::Type Token::type() const { return m_type; }
+const std::string &Token::value() const { return m_value; }
 bool Token::operator==(const Token &rhs) const {
   return rhs.type() == m_type && rhs.value() == m_value;
 }

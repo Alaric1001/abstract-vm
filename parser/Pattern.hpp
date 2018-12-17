@@ -3,8 +3,8 @@
 
 #include "lexer/Token.hpp"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include <iostream>
 namespace parser {
@@ -16,14 +16,16 @@ class Token {
 
  public:
   virtual ~Token() = default;
-  Token(bool optional) : m_optional(optional) {}
+  Token() = delete;
+  Token(const Token&) = delete;
+  Token& operator=(const Token&) = delete;
 
-  bool optional() const { return m_optional; }
+  Token(bool optional);
+
+  bool optional() const;
 
   virtual bool operator==(const lexer::Token& token) const = 0;
-  bool operator!=(const lexer::Token& token) const {
-    return !(operator==(token));
-  }
+  bool operator!=(const lexer::Token& token) const;
 };
 
 class Eq : public Token {
@@ -31,13 +33,15 @@ class Eq : public Token {
   lexer::Token::Type m_ref;
 
  public:
-  Eq(lexer::Token::Type ref, bool optional = false)
-      : Token(optional), m_ref(ref) {}
+  Eq() = delete;
+  Eq(const Eq&) = delete;
+  Eq& operator=(const Eq&) = delete;
+  Eq(lexer::Token::Type ref, bool optional = false);
 
   bool operator==(const lexer::Token& token) const override;
   bool operator==(const Eq& token) const;
 
-  auto ref() const { return m_ref; }
+  decltype(m_ref) ref() const;
 };
 
 using Pattern = std::vector<const Token*>;

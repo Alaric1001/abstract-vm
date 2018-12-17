@@ -3,7 +3,10 @@
 
 #include <cfenv>
 #include <cmath>
+#include <functional>
 #include <limits>
+
+#include <iostream>
 
 namespace utils {
 
@@ -20,55 +23,52 @@ struct wrapper {
 };
 
 template <typename T>
-OperationState generic_floating_point_check(T a, T b) {
-  T tmp;
+OperationState generic_floating_point_check(std::function<T(void)> f) {
   std::feclearexcept(FE_ALL_EXCEPT);
-  tmp = a * b;
+  T tmp = f();
   int except = std::fetestexcept(FE_UNDERFLOW | FE_OVERFLOW);
-  if (except | FE_UNDERFLOW) return OperationState::Underflow;
-  if (except | FE_OVERFLOW) return OperationState::Overflow;
-  if (std::isnormal(tmp)) return OperationState::Ok;
+  if (except & FE_UNDERFLOW) return OperationState::Underflow;
+  if (except & FE_OVERFLOW) return OperationState::Overflow;
+  if (std::isfinite(tmp)) return OperationState::Ok;
   return OperationState::Invalid;
 }
 
 template <typename T>
 struct wrapper<T, true> {
   static OperationState add(T a, T b) {
-    return generic_floating_point_check(a, b);
+    return generic_floating_point_check<T>([a, b]() -> T { return a + b; });
   }
   static OperationState sub(T a, T b) {
-    return generic_floating_point_check(a, b);
+    return generic_floating_point_check<T>([a, b]() -> T { return a - b; });
   }
   static OperationState div(T a, T b) {
-    return generic_floating_point_check(a, b);
+    return generic_floating_point_check<T>([a, b]() -> T { return a / b; });
   }
   static OperationState mul(T a, T b) {
-    return generic_floating_point_check(a, b);
+    return generic_floating_point_check<T>([a, b]() -> T { return a * b; });
   }
 };
 
 template <typename T>
 struct wrapper<T, false> {
   static OperationState add(T a, T b) {
-    if (a > std::numeric_limits<T>::max() - b) return OperationState::Overflow;
-    if (b < 0 && a < std::numeric_limits<T>::min() - b)
-      return OperationState::Underflow;
+    double r = static_cast<double>(a) + static_cast<double>(b);
+    if (r > std::numeric_limits<T>::max()) return OperationState::Overflow;
+    if (r < std::numeric_limits<T>::min()) return OperationState::Underflow;
     return OperationState::Ok;
   }
 
   static OperationState sub(T a, T b) {
-    if (a > std::numeric_limits<T>::max() + b) return OperationState::Overflow;
-    if (a < std::numeric_limits<T>::min() + b) return OperationState::Underflow;
+    double r = static_cast<double>(a) - static_cast<double>(b);
+    if (r > std::numeric_limits<T>::max()) return OperationState::Overflow;
+    if (r < std::numeric_limits<T>::min()) return OperationState::Underflow;
     return OperationState::Ok;
   }
 
   static OperationState mul(T a, T b) {
-    if (a > std::numeric_limits<T>::max() / b) return OperationState::Overflow;
-    if (a < std::numeric_limits<T>::min() / b) return OperationState::Underflow;
-
-    if ((a == -1 && b == std::numeric_limits<T>::min()) or
-        (b == -1 && a == std::numeric_limits<T>::min()))
-      return OperationState::Overflow;
+    double r = static_cast<double>(a) * static_cast<double>(b);
+    if (r > std::numeric_limits<T>::max()) return OperationState::Overflow;
+    if (r < std::numeric_limits<T>::min()) return OperationState::Underflow;
     return OperationState::Ok;
   }
 

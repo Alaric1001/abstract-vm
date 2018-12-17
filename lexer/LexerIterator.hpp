@@ -7,19 +7,25 @@
 namespace lexer {
 
 class LexerIterator {
+ public:
+  using it = std::string::const_iterator;
+
  private:
-  std::string::const_iterator m_iterator;
-  std::string::const_iterator m_end;
+  it m_iterator;
+  it m_end;
 
  public:
+  LexerIterator() = delete;
   LexerIterator(const std::string&);
+  LexerIterator(const LexerIterator&) = default;
+  LexerIterator& operator=(const LexerIterator&) = default;
   void next_word();
   void next_blank();
 
-  const auto& iterator() const { return m_iterator; }
-  const auto& end() const { return m_end; }
-  const auto& operator++() { return ++m_iterator; }
-  const auto& operator*() { return *m_iterator; }
+  it iterator() const; 
+  it end() const; 
+  it operator++();
+  const char& operator*(); 
 
   template <typename T>
   const auto& operator+=(const T& t) {

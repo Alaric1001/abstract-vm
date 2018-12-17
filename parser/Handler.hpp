@@ -17,14 +17,17 @@ class Handler {
 
  private:
   virtual const pattern::Pattern& get_pattern(const lexer::Token&) const = 0;
-  virtual void do_check(iterator begin, iterator i, iterator end) = 0;
+  virtual void do_check(iterator i, iterator end) = 0;
 
  public:
+  Handler() = default;
+  Handler(const Handler&) = default;
+  Handler& operator=(const Handler&) = default;
   virtual ~Handler() = default;
   void check(iterator i, iterator end);
   virtual std::unique_ptr<const exec::IExecElem> parse(iterator, iterator) const = 0;
 
-  auto token_processed() const { return m_token_processed; }
+  std::size_t token_processed() const;
 
   static Handler* get_handler(const lexer::Token& token);
 };

@@ -1,6 +1,5 @@
 #include "lexer/lexer.hpp"
 #include "lexer/LexerIterator.hpp"
-#include "lexer/punctuation.hpp"
 
 #include <algorithm>
 #include <functional>

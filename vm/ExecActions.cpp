@@ -1,5 +1,6 @@
 #include "vm/ExecActions.hpp"
 
+#include "utils/Logger.hpp"
 #include "vm/Operand.hpp"
 #include "vm/globals.hpp"
 
@@ -35,6 +36,8 @@ void dump(Stack& s) {
 
 void pop(Stack& s) {
   if (s.empty()) throw utils::RuntimeError("Attempt to pop on an empty stack");
+  utils::Logger::instance()
+      << "Popping " << s.top()->to_string() << " off the stack\n";
   s.pop();
 }
 
@@ -52,66 +55,75 @@ void operation(
     Stack& s,
     std::function<IOperand::Ptr(const IOperand&, const IOperand&)> op) {
   if (s.size() < 2) throw utils::RuntimeError("Stack has less than 2 values");
-  //TODO just release the ptr
-  auto top = s.top()->clone();
+  std::unique_ptr<const IOperand> top(s.top().release());
   s.pop();
   try {
     auto new_elem = op(*s.top(), *top);
     s.pop();
     s.push(std::move(new_elem));
-  } catch (utils::RuntimeError& e) {
+  } catch (utils::RuntimeError&) {
     s.push(std::move(top));
-    throw e;
+    throw;
   }
 }
 
 void add(Stack& s) {
   try {
     operation(s, [](const IOperand& a, const IOperand& b) -> IOperand::Ptr {
+      utils::Logger::instance()
+          << a.to_string() << " + " << b.to_string() << "\n";
       return a + b;
     });
-  } catch (utils::RuntimeError& e) {
-    throw e;
+  } catch (utils::RuntimeError&) {
+    throw;
   }
 }
 
 void sub(Stack& s) {
   try {
     operation(s, [](const IOperand& a, const IOperand& b) -> IOperand::Ptr {
+      utils::Logger::instance()
+          << a.to_string() << " - " << b.to_string() << "\n";
       return a - b;
     });
-  } catch (utils::RuntimeError& e) {
-    throw e;
+  } catch (utils::RuntimeError&) {
+    throw;
   }
 }
 
 void mul(Stack& s) {
   try {
     operation(s, [](const IOperand& a, const IOperand& b) -> IOperand::Ptr {
+      utils::Logger::instance()
+          << a.to_string() << " * " << b.to_string() << "\n";
       return a * b;
     });
-  } catch (utils::RuntimeError& e) {
-    throw e;
+  } catch (utils::RuntimeError&) {
+    throw;
   }
 }
 
 void div(Stack& s) {
   try {
     operation(s, [](const IOperand& a, const IOperand& b) -> IOperand::Ptr {
+      utils::Logger::instance()
+          << a.to_string() << " / " << b.to_string() << "\n";
       return a / b;
     });
-  } catch (utils::RuntimeError& e) {
-    throw e;
+  } catch (utils::RuntimeError&) {
+    throw;
   }
 }
 
 void mod(Stack& s) {
   try {
     operation(s, [](const IOperand& a, const IOperand& b) -> IOperand::Ptr {
+      utils::Logger::instance()
+          << a.to_string() << " % " << b.to_string() << "\n";
       return a % b;
     });
-  } catch (utils::RuntimeError& e) {
-    throw e;
+  } catch (utils::RuntimeError&) {
+    throw;
   }
 }
 
@@ -138,8 +150,9 @@ void ExecValueAction::execute(Stack& s) const { m_action(s, m_value.get()); }
 void push(Stack& s, const ExecOperand* op) {
   try {
     s.push(OperandFactory::instance().create_operand(op->type(), op->value()));
-  } catch (utils::RuntimeError& e) {
-    throw e;
+    utils::Logger::instance() << "Value " << op->value() << " pushed on the stack\n";
+  } catch (utils::RuntimeError&) {
+    throw;
   }
 }
 
@@ -150,9 +163,11 @@ void assert_value(Stack& s, const ExecOperand* op) {
   try {
     maked_op =
         OperandFactory::instance().create_operand(op->type(), op->value());
-  } catch (utils::RuntimeError& e) {
-    throw e;
+  } catch (utils::RuntimeError&) {
+    throw;
   }
+  utils::Logger::instance() << "Asserting that " << top->to_string()
+                            << " == " << maked_op->to_string() << "\n";
   if (*top != *maked_op) throw utils::RuntimeError("Assertion failed");
 }
 
