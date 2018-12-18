@@ -35,14 +35,13 @@ void skip_spaces_and_nl(iterator &it, iterator end) {
 }
 
 void check_line(iterator begin, iterator end) {
-  //for (auto i = begin; i != end; ++i) {
+  // for (auto i = begin; i != end; ++i) {
   //  i->dump(std::cerr);
   //  std::cerr << ", ";
   //}
-  //std::cerr << "\n";
+  // std::cerr << "\n";
   skip_spaces_and_nl(begin, end);
-  if(begin < end)
-    InstructionHandler::instance().check(begin, end);
+  if (begin < end) InstructionHandler::instance().check(begin, end);
 }
 
 bool syntax_checks(const std::deque<lexer::Token> &tokens) {
@@ -54,6 +53,7 @@ bool syntax_checks(const std::deque<lexer::Token> &tokens) {
   globals::LineCounter::reset();
   while (it < end) {
     skip_spaces_and_nl(it, end);
+    if (it >= end) break;
     try {
       inst_hand.check(it, end);
       it += inst_hand.token_processed();
@@ -79,8 +79,7 @@ void parse_and_exec_line(std::deque<lexer::Token> &tokens, exec::Stack &stack) {
   auto end = tokens.cend();
   assert(it < end);
   next_instruction(it, end);
-  if (it >= end)
-    return ;
+  if (it >= end) return;
   auto action = InstructionHandler::instance().parse(it, end);
   try {
     static_cast<const exec::IExecAction *>(action.get())->execute(stack);
