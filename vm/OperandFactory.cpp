@@ -22,8 +22,8 @@ const OperandFactory& OperandFactory::instance() { return s_instance; }
 IOperand::Ptr OperandFactory::create_operand(IOperand::OperandType type,
                                              const std::string& v) const {
   static const std::function<IOperand::Ptr(double)> arr[5] = {
-      ::create_operand<int8_t>, ::create_operand<int32_t>,
-      ::create_operand<int64_t>, ::create_operand<float>,
+      ::create_operand<int8_t>, ::create_operand<int16_t>,
+      ::create_operand<int32_t>, ::create_operand<float>,
       ::create_operand<double>};
   IOperand::Ptr ret;
   try {
