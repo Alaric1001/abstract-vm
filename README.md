@@ -2,7 +2,7 @@
 Little pseudo-assembly interpretor written in cpp17.
 The project coding guidelines were:
 * Typed numerics
-* Error handling via exception
+* Error handling via exceptions
 * Use of the IOperand interface as it is given in the subject.
 
 ## Build & make
