@@ -1,9 +1,9 @@
 # AbstractVM
 Little pseudo-assembly interpretor written in cpp17.
-The project coding guidelines where:
+The project coding guidelines were:
 * Typed numerics
 * Error handling via exception
-* Use of the IOperand interface as it is.
+* Use of the IOperand interface as it is given in the subject.
 
 ## Build & make
 
